@@ -1,31 +1,55 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useProvider, useSigner } from 'wagmi';
+import { ethers } from 'ethers';
+import abi from '../contracts/abi.json';
 
 const CoinFlip = () => {
-    const [ani, setAni] = useState<'animate-coin' | ''>('');
-    const [selected, setSelected] = useState("");
-    const [bet, setBet] = useState("");
+    const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+    const { data } = useSigner();
+    const provider = useProvider();
+    const CoinFlipContract = new ethers.Contract(contractAddress, abi, provider);
+
+    const [selected, setSelected] = useState('');
+    const [bet, setBet] = useState('');
 
     const handleClick = (event: any) => {
         setSelected(event.target.value);
-    }
+    };
 
     const handleChange = (event: any) => {
         setBet(event.target.value);
     };
 
-    const flipCoin = () => {
+    const handleFlip = async () => {
+        try {
         if (!bet) {
             alert('Please enter a bet amount first!');
             return;
         }
 
-        setAni('animate-coin');
-        setTimeout(() => {
-        setAni('');
-        }, 1000);
-    };
+        // Bet amount in Ether
+        const betAmount = ethers.utils.parseEther(bet);
+
+        let betOutcome = 0;
+
+        // Chosen outcome: Outcome.Tails (0) or Outcome.Heads (1)
+        if (selected === 'Heads') {
+            betOutcome = 1;
+        }
+        else if (selected === 'Tails') {
+            betOutcome = 0;
+        }
+
+        // Call the flip function with the provided bet amount and outcome
+        const tx = await CoinFlipContract.flip(betAmount, betOutcome);
+        console.log(tx);
+    } catch (err) {
+        console.log(err);
+    }
+};
+
 
     // TODO: Add a random number generator to determine heads or tails based on the smart contract
     const result = <p className="inline text-xl font-bold">{Math.random() < 0.5 ? 'Heads' : 'Tails'}</p>
@@ -34,7 +58,7 @@ const CoinFlip = () => {
         <>
         <ConnectButton />
         <div className='mt-4 mb-4'>
-            <div className={'coin ' + ani}>{result}</div>
+            <div className={'coin'}>{result}</div>
         </div>
 
         {selected ? (
@@ -81,8 +105,8 @@ const CoinFlip = () => {
         </div>
         
         <span>
-            <div className='mt-4 mb-4' onClick={flipCoin}>
-                FLIP
+            <div className='mt-4 mb-4' onClick={handleFlip}>
+
             </div>
         </span>
 
@@ -90,7 +114,7 @@ const CoinFlip = () => {
             <p className="bg-blue-500 hover:bg-blue-700 
             text-white font-bold py-2 px-4 rounded-full
             mt-4">
-                Contract : 0x8A90ca40372dAEF77532D1C3538E68715Ba36fD7
+                Contract : <a target="blank_" href='https://sepolia.etherscan.io/address/0x136e680fd99Cb30cCe582eB8E0Cb44402c4905f6'>0x136e680fd99Cb30cCe582eB8E0Cb44402c4905f6</a>
             </p>
         </div>
         </>

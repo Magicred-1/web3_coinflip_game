@@ -5,7 +5,6 @@ import React from 'react';
 import CoinFlip from '../components/CoinFlip';
 
 const Home: NextPage = () => {
-
   return (
     <div className={styles.container}>
       <Head>
