@@ -1,42 +1,39 @@
-pragma solidity ^0.8.19;
+// SPDX-License-Identifier: MIT
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+pragma solidity ^0.8.17;
 
-contract coin_flip {
-    address payable owner;
-    address payable player;
+import "@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol";
 
-    constructor() public {
-        owner = payable(msg.sender);
+contract LotteryCoinFlip is VRFV2WrapperConsumerBase {
+    struct Player {
+        uint256 betAmount;
+        uint256 betSide;
     }
 
-    function flip() public payable {
-        require(msg.value == 0.002 ether, "Must send 1 ether");
-        uint256 time = block.timestamp;
-        uint256 bet = time % 2;
-        if (bet == 0) {
-            owner.transfer(2 ether);
-        } else {
-            player = payable(msg.sender);
-            player.transfer(2 ether);
-        }
-    }
+    mapping(address => Player) public players;
 
-    function getBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
+    uint256 public randomResult;
 
-    function withdraw() public {
-        require(msg.sender == owner, "Only owner can withdraw");
-        owner.transfer(address(this).balance);
-    }
+    uint256 public totalBetAmount;
 
-    function getOwner() public view returns (address) {
-        return owner;
-    }
+    uint256 public totalBetSide;
 
-    function getPlayer() public view returns (address) {
-        return player;
-    }
 
-}
+    constructor(
+        address _vrfCoordinator,
+        address _link,
+        bytes32 _keyHash,
+        uint256 _fee
+    ) VRFV2WrapperConsumerBase(_vrfCoordinator, _link, _keyHash, _fee) {}
+
+    function flipCoin(uint256 _betSide) public payable returns (bytes32 requestId) {
+        require(_betSide == 0 || _betSide == 1, "Invalid bet side");
+        require(msg.value > 0, "Invalid bet amount");
+        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
+
+        bytes32 _requestId = requestRandomness(keyHash, fee);
+        players[msg.sender] = Player(msg.value, _betSide);
+        totalBetAmount += msg.value;
+        totalBetSide += _betSide;
+        return _requestId;
+    }

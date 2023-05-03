@@ -95,6 +95,15 @@ span div:hover{
   animation: flip 4s 1;
 }
 
+.eth-icon {
+  position: 'absolute';
+  top: '50%';
+  transform: 'translateY(-65%)';
+  right: '0px';
+  width: '20px';
+  height: '20px';
+}
+
 @keyframes flip {
   0% {
     transform: rotateY(0deg);
