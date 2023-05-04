@@ -8,11 +8,15 @@ import abi from '../contracts/abi.json';
 const CoinFlip = () => {
     const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
     const { data } = useSigner();
+    // console.log(data);
     const provider = useProvider();
     const CoinFlipContract = new ethers.Contract(contractAddress, abi, provider);
 
+    const [ani, setAni] = useState<'animate-coin' | ''>('');
+
     const [selected, setSelected] = useState('');
     const [bet, setBet] = useState('');
+
 
     const handleClick = (event: any) => {
         setSelected(event.target.value);
@@ -28,6 +32,11 @@ const CoinFlip = () => {
             alert('Please enter a bet amount first!');
             return;
         }
+
+        setAni('animate-coin');
+        setTimeout(() => {
+        setAni('');
+        }, 1000);
 
         // Bet amount in Ether
         const betAmount = ethers.utils.parseEther(bet);
@@ -58,7 +67,7 @@ const CoinFlip = () => {
         <>
         <ConnectButton />
         <div className='mt-4 mb-4'>
-            <div className={'coin'}>{result}</div>
+            <div className={'coin ' + ani}>{result}</div>
         </div>
 
         {selected ? (
