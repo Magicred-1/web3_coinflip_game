@@ -6,9 +6,8 @@ import { ethers } from 'ethers';
 import abi from '../contracts/abi.json';
 
 const CoinFlip = () => {
-    const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-    const { data } = useSigner();
-    // console.log(data);
+    const contractAddress = '0x0f3AE466E2a5F182adaE2c1e1B54FD1CB8318502';
+    const signer = useSigner();
     const provider = useProvider();
     const CoinFlipContract = new ethers.Contract(contractAddress, abi, provider);
 
@@ -33,27 +32,36 @@ const CoinFlip = () => {
             return;
         }
 
-        setAni('animate-coin');
-        setTimeout(() => {
-        setAni('');
-        }, 1000);
+        if (selected === '') {
+            alert('Please select Heads or Tails first!');
+            return;
+        }
 
         // Bet amount in Ether
         const betAmount = ethers.utils.parseEther(bet);
 
-        let betOutcome = 0;
+        let betOutcome = false // Heads by default;
 
-        // Chosen outcome: Outcome.Tails (0) or Outcome.Heads (1)
+        // Chosen outcome: Outcome.Heads (1) or Outcome.Tails (0)
         if (selected === 'Heads') {
-            betOutcome = 1;
+            betOutcome = false;
         }
         else if (selected === 'Tails') {
-            betOutcome = 0;
+            betOutcome = true;
         }
-
+        if(signer.data != null){
         // Call the flip function with the provided bet amount and outcome
-        const tx = await CoinFlipContract.flip(betAmount, betOutcome);
-        console.log(tx);
+            const tx = await CoinFlipContract.connect(signer.data).flipCoin(betOutcome, { value: betAmount });
+
+            console.log(tx);
+
+            await tx.wait();
+
+            setAni('animate-coin');
+            setTimeout(() => {
+            setAni('');
+            }, 1000);
+        }
     } catch (err) {
         console.log(err);
     }
@@ -123,7 +131,7 @@ const CoinFlip = () => {
             <p className="bg-blue-500 hover:bg-blue-700 
             text-white font-bold py-2 px-4 rounded-full
             mt-4">
-                Contract : <a target="blank_" href='https://sepolia.etherscan.io/address/0x136e680fd99Cb30cCe582eB8E0Cb44402c4905f6'>0x136e680fd99Cb30cCe582eB8E0Cb44402c4905f6</a>
+                Contract : <a target="blank_" href='https://sepolia.etherscan.io/address/0x0f3AE466E2a5F182adaE2c1e1B54FD1CB8318502'>0x0f3AE466E2a5F182adaE2c1e1B54FD1CB8318502</a>
             </p>
         </div>
         </>

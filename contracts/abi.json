@@ -1,138 +1,30 @@
 [
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_vrfCoordinator",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_linkToken",
-                "type": "address"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "_keyHash",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_fee",
-                "type": "uint256"
-            }
-        ],
+        "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
     },
     {
-        "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
-                "internalType": "bytes32",
-                "name": "requestId",
-                "type": "bytes32"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "flipper",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "betAmount",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "enum CoinFlip.Outcome",
-                "name": "betOutcome",
-                "type": "uint8"
+                "internalType": "bool",
+                "name": "choice",
+                "type": "bool"
             }
         ],
-        "name": "FlipResult",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "bytes32",
-                "name": "requestId",
-                "type": "bytes32"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "flipper",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "enum CoinFlip.Outcome",
-                "name": "outcome",
-                "type": "uint8"
-            }
-        ],
-        "name": "OutcomeRevealed",
-        "type": "event"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "balances",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
+        "name": "flipCoin",
+        "outputs": [],
+        "stateMutability": "payable",
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "name": "bets",
+        "inputs": [],
+        "name": "getBalance",
         "outputs": [
             {
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "bytes32",
-                "name": "requestId",
-                "type": "bytes32"
-            }
-        ],
-        "name": "claimOutcome",
-        "outputs": [
-            {
-                "internalType": "enum CoinFlip.Outcome",
-                "name": "",
-                "type": "uint8"
             }
         ],
         "stateMutability": "view",
@@ -140,49 +32,51 @@
     },
     {
         "inputs": [],
-        "name": "deposit",
-        "outputs": [],
-        "stateMutability": "payable",
+        "name": "getPlayers",
+        "outputs": [
+            {
+                "internalType": "address payable[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "betAmount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "enum CoinFlip.Outcome",
-                "name": "betOutcome",
-                "type": "uint8"
-            }
-        ],
-        "name": "flip",
+        "inputs": [],
+        "name": "manager",
         "outputs": [
             {
-                "internalType": "bytes32",
+                "internalType": "address",
                 "name": "",
-                "type": "bytes32"
+                "type": "address"
             }
         ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "pickWinner",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
         "inputs": [
             {
-                "internalType": "bytes32",
+                "internalType": "address",
                 "name": "",
-                "type": "bytes32"
+                "type": "address"
             }
         ],
-        "name": "outcomes",
+        "name": "playerBets",
         "outputs": [
             {
-                "internalType": "enum CoinFlip.Outcome",
+                "internalType": "uint256",
                 "name": "",
-                "type": "uint8"
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -191,32 +85,52 @@
     {
         "inputs": [
             {
-                "internalType": "bytes32",
-                "name": "requestId",
-                "type": "bytes32"
-            },
-            {
-                "internalType": "uint256",
-                "name": "randomness",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "",
+                "type": "address"
             }
         ],
-        "name": "rawFulfillRandomness",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "playerChoices",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "amount",
+                "name": "",
                 "type": "uint256"
             }
         ],
-        "name": "withdraw",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "players",
+        "outputs": [
+            {
+                "internalType": "address payable",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "random",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     }
 ]
